@@ -3,12 +3,11 @@ package com.example.appfinaldistribuidos;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView tvWelcome;
+    private TextView tvUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,13 +17,7 @@ public class MainActivity extends AppCompatActivity {
         Intent i = getIntent();
         String id = i.getExtras().getString("Codigo Estudiante");
 
-        tvWelcome = findViewById(R.id.tv_Welcome);
-        tvWelcome.setText("Bienvenido: " + id);
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        //Do-Nothing
+        tvUser = findViewById(R.id.tv_User);
+        tvUser.setText("Bienvenido: " + id);
     }
 }
