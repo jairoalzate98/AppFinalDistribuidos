@@ -27,6 +27,7 @@
         android:ems="10"
         android:hint="@string/codigo_estudiantil"
         android:inputType="number"
+        android:text="201611393"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_Main" />
@@ -51,6 +52,7 @@
         android:ems="10"
         android:hint="@string/contrasenia"
         android:inputType="textPassword"
+        android:text="a123"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_Codigo" />
