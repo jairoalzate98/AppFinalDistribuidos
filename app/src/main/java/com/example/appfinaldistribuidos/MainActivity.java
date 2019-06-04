@@ -1,5 +1,6 @@
 package com.example.appfinaldistribuidos;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -61,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(getBaseContext(), AddPost.class);
+                startActivity(i);
             }
         });
 
@@ -149,17 +150,6 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     AllPost allPost = new AllPost();
                     return allPost;
-            }
-            return null;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position){
-                case 0:
-                    return "My Post";
-                case 1:
-                    return "All Post";
             }
             return null;
         }
