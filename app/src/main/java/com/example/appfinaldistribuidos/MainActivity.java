@@ -20,4 +20,9 @@ public class MainActivity extends AppCompatActivity {
         tvUser = findViewById(R.id.tv_User);
         tvUser.setText("Bienvenido: " + id);
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }
