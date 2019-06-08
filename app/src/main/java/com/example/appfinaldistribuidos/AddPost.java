@@ -2,18 +2,26 @@ package com.example.appfinaldistribuidos;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,9 +32,12 @@ import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class AddPost extends AppCompatActivity {
 
-    //TODO Agregar los componentes de la ventana de creacion de post, como agregar imagenes de la memoria?
+    //TODO Agregar informacion de la ubicacion en donde se realizo cada post
+
+    private FusedLocationProviderClient client;
 
     private ImageView ivPhoto;
+    private TextView tvLocation;
     private String pathToFile;
 
     @Override
@@ -35,20 +46,26 @@ public class AddPost extends AppCompatActivity {
         setContentView(R.layout.activity_add_post);
 
         ivPhoto = findViewById(R.id.iv_Photo);
-        if (Build.VERSION.SDK_INT >= 23){
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
-        }
+        tvLocation = findViewById(R.id.tv_Location);
+        client = LocationServices.getFusedLocationProviderClient(this);
+
+        requestPermissions();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK){
-            if (requestCode == 1){
-                Bitmap bitmap = BitmapFactory.decodeFile(pathToFile);
-                ivPhoto.setImageBitmap(bitmap);
-            }
+    public void getLocation(View view) {
+        if (ActivityCompat.checkSelfPermission(
+                AddPost.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
         }
+        client.getLastLocation().addOnSuccessListener(AddPost.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null){
+                    tvLocation.setText(location.toString());
+                }
+            }
+        });
     }
 
     public void takePhotoFromCamera(View view){
@@ -63,6 +80,23 @@ public class AddPost extends AppCompatActivity {
                 takePhoto.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePhoto, 1);
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK){
+            if (requestCode == 1){
+                Bitmap bitmap = BitmapFactory.decodeFile(pathToFile);
+                ivPhoto.setImageBitmap(bitmap);
+            }
+        }
+    }
+
+    private void requestPermissions() {
+        if (Build.VERSION.SDK_INT >= 23){
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION}, 2);
         }
     }
 
