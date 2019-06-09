@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class PostManager {
@@ -12,6 +14,11 @@ public class PostManager {
 
     public void loadPostOnPostList(){
 
+    }
+
+    public JSONObject convertPostToJSONObject(Post post){
+
+        return null;
     }
 
 

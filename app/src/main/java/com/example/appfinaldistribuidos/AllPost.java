@@ -28,6 +28,7 @@ public class AllPost extends Fragment {
 
     private static final String SERVER = "http://192.168.1.151:3001/Prueba";
 
+    private JSONArray JSONAllPost;
     private TextView tvPrueba;
     private String json;
 
@@ -44,9 +45,15 @@ public class AllPost extends Fragment {
 
         tvPrueba = v.findViewById(R.id.tv_Prueba);
 
-        requestServer(v);
+        //requestServer(v);
+        r();
 
         return v;
+    }
+
+    private void r() {
+        HttpGetRequest request = new HttpGetRequest();
+        request.execute();
     }
 
     private void requestServer(View v) {
@@ -108,9 +115,9 @@ public class AllPost extends Fragment {
 
     private void convertResultToJSon(String result) {
         try {
-            JSONArray obj = new JSONArray(result);
+            JSONAllPost = new JSONArray(result);
 
-            Log.d("JSON", obj.toString());
+            Log.d("JSON", JSONAllPost.toString());
         } catch (JSONException e) {
             Log.d("JSON", "JSON Malformado xdxd");
         }
