@@ -37,6 +37,38 @@ public class Post {
         this.postDate = postDate;
     }
 
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public String getPostTitle() {
+        return postTitle;
+    }
+
+    public String getPostDescription() {
+        return postDescription;
+    }
+
+    public Bitmap getPostImage() {
+        return postImage;
+    }
+
+    public Date getPostDate() {
+        return postDate;
+    }
+
+    public Location getPostLocation() {
+        return postLocation;
+    }
+
+    public double getPostLatitude() {
+        return postLatitude;
+    }
+
+    public double getPostLongitude() {
+        return postLongitude;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
