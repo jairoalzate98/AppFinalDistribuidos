@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
                 toastMessage = Toast.makeText(this, "Usuario valido", Toast.LENGTH_SHORT);
                 toastMessage.show();
                 Intent mainActivity = new Intent(getBaseContext(), MainActivity.class);
-                mainActivity.putExtra("Codigo Estudiante", etCodigo.getText().toString());
+                mainActivity.putExtra("codigo", etCodigo.getText().toString());
                 startActivity(mainActivity);
             }else {
                 toastMessage = Toast.makeText(this, "Usuario no encontrado", Toast.LENGTH_SHORT);

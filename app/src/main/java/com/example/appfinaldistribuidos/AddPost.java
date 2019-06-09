@@ -16,8 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -26,19 +28,28 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+
+import model.Post;
 
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class AddPost extends AppCompatActivity {
 
-    //TODO Agregar informacion de la ubicacion en donde se realizo cada post
-
     private FusedLocationProviderClient client;
 
     private ImageView ivPhoto;
-    private TextView tvLocation;
+    private EditText etTitle;
+    private EditText etDescription;
+
+    private int studentId;
+    private Date currentTime;
     private String pathToFile;
+    private Bitmap finalPhoto;
+    private Location postLocation;
+    private Post finalPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,26 +57,34 @@ public class AddPost extends AppCompatActivity {
         setContentView(R.layout.activity_add_post);
 
         ivPhoto = findViewById(R.id.iv_Photo);
-        tvLocation = findViewById(R.id.tv_Location);
+        etTitle =findViewById(R.id.et_title);
+        etDescription = findViewById(R.id.et_description);
+
         client = LocationServices.getFusedLocationProviderClient(this);
 
         requestPermissions();
+        getLocation();
     }
 
-    public void getLocation(View view) {
-        if (ActivityCompat.checkSelfPermission(
-                AddPost.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
-        }
-        client.getLastLocation().addOnSuccessListener(AddPost.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null){
-                    tvLocation.setText(location.toString());
+    public void sendPost(View view){
+        if (validateEmptyFields()){
+            if (validateNoPhoto()){
+                if (postLocation != null){
+                    finalPost = new Post(studentId, etTitle.getText().toString(), etDescription.getText().toString(), finalPhoto, currentTime, postLocation, postLocation.getLatitude(), postLocation.getLongitude());
+                }else{
+                    finalPost = new Post(studentId, etTitle.getText().toString(), etDescription.getText().toString(), finalPhoto, currentTime);
                 }
             }
-        });
+        }
+    }
+
+    private boolean validateNoPhoto() {
+        if (finalPhoto != null){
+            return true;
+        }
+        Toast t = Toast.makeText(getBaseContext(), "Por favor agrega una foto", Toast.LENGTH_SHORT);
+        t.show();
+        return false;
     }
 
     public void takePhotoFromCamera(View view){
@@ -83,25 +102,44 @@ public class AddPost extends AppCompatActivity {
         }
     }
 
+    public void getLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                AddPost.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        client.getLastLocation().addOnSuccessListener(AddPost.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null){
+                    postLocation = location;
+                }else {
+                    postLocation = null;
+                }
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK){
             if (requestCode == 1){
-                Bitmap bitmap = BitmapFactory.decodeFile(pathToFile);
-                ivPhoto.setImageBitmap(bitmap);
+                finalPhoto = BitmapFactory.decodeFile(pathToFile);
+                ivPhoto.setImageBitmap(finalPhoto);
             }
         }
     }
 
     private void requestPermissions() {
         if (Build.VERSION.SDK_INT >= 23){
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION}, 2);
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
         }
     }
 
     private File createPhotoFile() {
-        String name = new SimpleDateFormat("yyyyMMDD_HHmmss").format(new Date());
+        currentTime = Calendar.getInstance().getTime();
+        String name = studentId + "-" + etTitle.getText().toString();
         File storageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = null;
         try {
@@ -110,5 +148,20 @@ public class AddPost extends AppCompatActivity {
             Log.d("MyLog", "Except:" + e.toString());
         }
         return image;
+    }
+
+    public boolean validateEmptyFields(){
+        if(etTitle.getText().toString().isEmpty() && etDescription.getText().toString().isEmpty()){
+            etTitle.setError("Titulo no puede estar en blanco");
+            etDescription.setError("Descripcion no puede estar en blanco");
+            return false;
+        }else if(etTitle.getText().toString().isEmpty()){
+            etTitle.setError("Titulo no puede estar en blanco");
+            return false;
+        }else if(etDescription.getText().toString().isEmpty()){
+            etDescription.setError("Descripcion no puede estar en blanco");
+            return false;
+        }
+        return true;
     }
 }
