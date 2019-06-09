@@ -70,9 +70,9 @@ public class AddPost extends AppCompatActivity {
         if (validateEmptyFields()){
             if (validateNoPhoto()){
                 if (postLocation != null){
-                    finalPost = new Post(studentId, etTitle.getText().toString(), etDescription.getText().toString(), finalPhoto, currentTime, postLocation, postLocation.getLatitude(), postLocation.getLongitude());
+                    finalPost = new Post(studentId, etTitle.getText().toString(), etDescription.getText().toString(), finalPhoto, currentTime, postLocation.getLatitude(), postLocation.getLongitude());
                 }else{
-                    finalPost = new Post(studentId, etTitle.getText().toString(), etDescription.getText().toString(), finalPhoto, currentTime);
+                    finalPost = new Post(studentId, etTitle.getText().toString(), etDescription.getText().toString(), finalPhoto, currentTime, 0, 0);
                 }
             }
         }

@@ -10,31 +10,34 @@ public class Post {
     private int studentId;
     private String postTitle;
     private String postDescription;
-    private Bitmap postImage;
+    private String postImage;
+    private Bitmap finalPhoto;
     private Date postDate;
     private Location postLocation;
     private double postLatitude;
     private double postLongitude;
 
-    public Post(int studentId, String postTitle, String postDescription,
-                Bitmap postImage, Date postDate, Location postLocation,
-                double postLatitude, double postLongitude) {
+
+    //Constructor para crear los post desde JSONObject
+    public Post(int studentId, String postTitle, String postDescription, String postImage, Date postDate, double postLatitude, double postLongitude) {
         this.studentId = studentId;
         this.postTitle = postTitle;
         this.postDescription = postDescription;
         this.postImage = postImage;
         this.postDate = postDate;
-        this.postLocation = postLocation;
         this.postLatitude = postLatitude;
         this.postLongitude = postLongitude;
     }
 
-    public Post(int studentId, String postTitle, String postDescription, Bitmap postImage, Date postDate) {
+    //Constructor para crear los post y enviarlos
+    public Post(int studentId, String postTitle, String postDescription, Bitmap finalPhoto, Date postDate, double postLatitude, double postLongitude) {
         this.studentId = studentId;
         this.postTitle = postTitle;
         this.postDescription = postDescription;
-        this.postImage = postImage;
+        this.finalPhoto = finalPhoto;
         this.postDate = postDate;
+        this.postLatitude = postLatitude;
+        this.postLongitude = postLongitude;
     }
 
     public int getStudentId() {
@@ -49,7 +52,7 @@ public class Post {
         return postDescription;
     }
 
-    public Bitmap getPostImage() {
+    public String getPostImage() {
         return postImage;
     }
 
@@ -74,10 +77,11 @@ public class Post {
         return "Post{" +
                 "studentId=" + studentId +
                 ", postTitle='" + postTitle + '\'' +
-                ", postDescription='" + postDescription.length() + '\'' +
-                ", postImage=" + postImage.getHeight() +
-                ", postDate=" + postDate.toString() +
-                ", postLocation=" + postLocation.toString() +
+                ", postDescription='" + postDescription + '\'' +
+                ", postImage='" + postImage + '\'' +
+                ", postDate=" + postDate +
+                ", postLatitude=" + postLatitude +
+                ", postLongitude=" + postLongitude +
                 '}';
     }
 }

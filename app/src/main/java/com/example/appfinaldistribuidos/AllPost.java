@@ -1,7 +1,5 @@
 package com.example.appfinaldistribuidos;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,12 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +18,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static android.provider.Telephony.Carriers.SERVER;
+import model.Post;
+import model.PostManager;
 
 public class AllPost extends Fragment {
 
@@ -31,6 +28,7 @@ public class AllPost extends Fragment {
     private JSONArray JSONAllPost;
     private TextView tvPrueba;
     private String json;
+    private PostManager postManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,25 +44,22 @@ public class AllPost extends Fragment {
         tvPrueba = v.findViewById(R.id.tv_Prueba);
 
         //requestServer(v);
-        r();
+        loadPost();
 
         return v;
     }
 
-    private void r() {
-        HttpGetRequest request = new HttpGetRequest();
-        request.execute();
+    private void loadPost(JSONArray jsonAllPost) {
+        postManager = new PostManager();
+        postManager.loadPostOnPostList(jsonAllPost);
+        for (Post post: postManager.getPostList()) {
+            Log.d("Posts: ", post.toString());
+        }
     }
 
-    private void requestServer(View v) {
-        Button btnPrueba = v.findViewById(R.id.button3);
-        btnPrueba.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HttpGetRequest request = new HttpGetRequest();
-                request.execute();
-            }
-        });
+    private void loadPost() {
+        HttpGetRequest request = new HttpGetRequest();
+        request.execute();
     }
 
     public class HttpGetRequest extends AsyncTask<Void, Void, String> {
@@ -116,10 +111,11 @@ public class AllPost extends Fragment {
     private void convertResultToJSon(String result) {
         try {
             JSONAllPost = new JSONArray(result);
-
-            Log.d("JSON", JSONAllPost.toString());
+            loadPost(JSONAllPost);
         } catch (JSONException e) {
             Log.d("JSON", "JSON Malformado xdxd");
         }
     }
+
+
 }
